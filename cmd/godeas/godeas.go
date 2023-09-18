@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// read idea file
-	file, err := os.OpenFile(homeDir+"/ideas.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
+	file, err := os.OpenFile(homeDir + "/ideas.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
 	if err != nil {
 		log.Fatal(err)
 	}
