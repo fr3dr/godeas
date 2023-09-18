@@ -38,17 +38,17 @@ func Remove(index int) {
 			char, _, err := reader.ReadRune()
 			checkError(err)
 
-            // if yes then remove
+			// if yes then remove
 			if char == 'y' || char == 'Y' {
 				fmt.Println("Removed: " + "\"" + scanner.Text() + "\"")
 			}
 		} else { // all other lines
-            // write current line to file
+			// write current line to file
 			_, err = temp.WriteString(scanner.Text() + "\n")
 			checkError(err)
 		}
 
-        // update index
+		// update index
 		i++
 	}
 
