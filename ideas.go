@@ -30,7 +30,7 @@ func Remove(index int) {
 	// scan file line by line
 	i := 1
 	for scanner.Scan() {
-		if i == index { // the line we want do remove
+		if i == index { // the line we want to remove
 			fmt.Print("Are you sure you want to remove \"" + scanner.Text() + "\"? [y/N]: ")
 
 			// get user input
@@ -38,13 +38,17 @@ func Remove(index int) {
 			char, _, err := reader.ReadRune()
 			checkError(err)
 
+            // if yes then remove
 			if char == 'y' || char == 'Y' {
 				fmt.Println("Removed: " + "\"" + scanner.Text() + "\"")
 			}
 		} else { // all other lines
-			_, err := temp.WriteString(scanner.Text() + "\n")
+            // write current line to file
+			_, err = temp.WriteString(scanner.Text() + "\n")
 			checkError(err)
 		}
+
+        // update index
 		i++
 	}
 
