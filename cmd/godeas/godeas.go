@@ -2,8 +2,6 @@ package main
 
 import (
 	"flag"
-	"log"
-	"os"
 
 	"github.com/fr3dr/godeas"
 )
@@ -16,19 +14,8 @@ func main() {
 	clear := flag.Bool("c", false, "clear ideas")
 	flag.Parse()
 
-	// get home dir
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// read idea file
-	file, err := os.OpenFile(homeDir + "/ideas.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	ideas.File = file
+	// read file
+	ideas.Read()
 
 	// check for flags
 	switch {
@@ -41,4 +28,7 @@ func main() {
 	case *clear:
 		ideas.Clear()
 	}
+
+	// store idea array back to file
+	ideas.Store()
 }

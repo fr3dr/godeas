@@ -7,63 +7,57 @@ import (
 	"os"
 )
 
-var File *os.File
+var ideas []string
 
-// append idea to file
-func Add(idea string) {
-	_, err := File.WriteString(idea + "\n")
-	checkError(err)
-	fmt.Println("Added idea")
-}
-
-func Remove(index int) {
-	scanner := bufio.NewScanner(File)
-
+func Read() {
 	// get home dir
 	homeDir, err := os.UserHomeDir()
 	checkError(err)
 
-	// create temp file
-	temp, err := os.CreateTemp(homeDir, "godeas")
+	// open idea file
+	file, err := os.OpenFile(homeDir+"/ideas.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
 	checkError(err)
+	defer file.Close()
 
-	// scan file line by line
-	i := 1
+	// scan the file line by line
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		if i == index { // the line we want to remove
-			fmt.Print("Are you sure you want to remove \"" + scanner.Text() + "\"? [y/N]: ")
-
-			// get user input
-			reader := bufio.NewReader(os.Stdin)
-			char, _, err := reader.ReadRune()
-			checkError(err)
-
-			// if yes then remove
-			if char == 'y' || char == 'Y' {
-				fmt.Println("Removed: " + "\"" + scanner.Text() + "\"")
-			}
-		} else { // all other lines
-			// write current line to file
-			_, err = temp.WriteString(scanner.Text() + "\n")
-			checkError(err)
-		}
-
-		// update index
-		i++
+		ideas = append(ideas, scanner.Text())
 	}
+}
 
-	// rename temp file to actual file
-	err = os.Rename(temp.Name(), File.Name())
+func Add(idea string) {
+	// append idea to ideas array
+	ideas = append(ideas, idea)
+	fmt.Println("Added idea:", idea)
+}
+
+func Remove(index int) {
+	fmt.Printf("Are you sure you want to remove idea: \"%v\"? [y/N]: ", ideas[index-1])
+
+	// get user input
+	reader := bufio.NewReader(os.Stdin)
+	char, _, err := reader.ReadRune()
 	checkError(err)
+
+	// check user input
+	if char == 'y' || char == 'Y' {
+		// if the length of the ideas array is 1 then just clear it because if we remove it we get an out of range exception
+		if len(ideas) > 1 {
+			// remove element from ideas array
+			ideas = append(ideas[:index], ideas[index+1:]...)
+		} else {
+			ideas = nil
+		}
+	} else {
+		fmt.Println("Didn't remove idea")
+	}
 }
 
 func List() {
-	scanner := bufio.NewScanner(File)
-	// scan the file line by line
-	i := 1
-	for scanner.Scan() {
-		fmt.Println(i, scanner.Text())
-		i++
+	// list all ideas and print index
+	for i, v := range ideas {
+		fmt.Println(i+1, v)
 	}
 }
 
@@ -77,10 +71,29 @@ func Clear() {
 
 	// check user input
 	if char == 'y' || char == 'Y' {
-		os.Create(File.Name())
-		fmt.Println("Cleared ideas")
+		ideas = nil
 	} else {
 		fmt.Println("Didn't clear ideas")
+	}
+}
+
+func Store() {
+	// get home dir
+	homeDir, err := os.UserHomeDir()
+	checkError(err)
+
+	// remove old file before writing to new one
+	err = os.Remove(homeDir + "/ideas.txt")
+	checkError(err)
+
+	// create new file
+	file, err := os.OpenFile(homeDir+"/ideas.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
+	checkError(err)
+	defer file.Close()
+
+	// write ideas array to file
+	for _, v := range ideas {
+		file.WriteString(v + "\n")
 	}
 }
 
