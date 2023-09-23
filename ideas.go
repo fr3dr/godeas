@@ -7,15 +7,17 @@ import (
 	"os"
 )
 
+
+var path string
 var ideas []string
 
-func Read() {
-	// get home dir
-	homeDir, err := os.UserHomeDir()
-	checkError(err)
+func SetPath(p string) {
+	path = p
+}
 
-	// open idea file
-	file, err := os.OpenFile(homeDir+"/ideas.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
+func Read() {
+	// open path
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
 	checkError(err)
 	defer file.Close()
 
@@ -78,16 +80,12 @@ func Clear() {
 }
 
 func Store() {
-	// get home dir
-	homeDir, err := os.UserHomeDir()
-	checkError(err)
-
 	// remove old file before writing to new one
-	err = os.Remove(homeDir + "/ideas.txt")
+	err := os.Remove(path)
 	checkError(err)
 
 	// create new file
-	file, err := os.OpenFile(homeDir+"/ideas.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
 	checkError(err)
 	defer file.Close()
 

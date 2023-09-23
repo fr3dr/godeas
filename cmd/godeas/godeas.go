@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"log"
+	"os"
 
 	"github.com/fr3dr/godeas"
 )
@@ -12,7 +14,19 @@ func main() {
 	remove := flag.Int("r", 0, "remove an idea by line number")
 	list := flag.Bool("l", false, "list ideas")
 	clear := flag.Bool("c", false, "clear ideas")
+	path := flag.String("p", "", "custom path to ideas file")
 	flag.Parse()
+
+	// set path to ideas file
+	if *path != "" {
+		ideas.SetPath(*path)
+	} else {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			log.Fatal(err)
+		}
+		ideas.SetPath(homeDir + "/ideas.txt")
+	}
 
 	// read file
 	ideas.Read()
