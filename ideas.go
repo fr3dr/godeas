@@ -7,7 +7,6 @@ import (
 	"os"
 )
 
-
 var path string
 var ideas []string
 
