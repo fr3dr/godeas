@@ -46,7 +46,7 @@ func Remove(index int) {
 		// if the length of the ideas array is 1 then just clear it because if we remove it we get an out of range exception
 		if len(ideas) > 1 {
 			// remove element from ideas array
-			ideas = append(ideas[:index], ideas[index+1:]...)
+			ideas = append(ideas[:index-1], ideas[index:]...)
 		} else {
 			ideas = nil
 		}
