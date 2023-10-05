@@ -28,8 +28,9 @@ func main() {
 		ideas.SetPath(homeDir + "/ideas.txt")
 	}
 
-	// read file
+	// read file and back it up
 	ideas.Read()
+	ideas.Backup()
 
 	// check for flags
 	switch {

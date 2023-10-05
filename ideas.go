@@ -78,6 +78,14 @@ func Clear() {
 	}
 }
 
+func Backup() {
+	input, err := os.ReadFile(path)
+	checkError(err)
+
+	err = os.WriteFile(path + ".backup", input, 0600)
+	checkError(err)
+}
+
 func Store() {
 	// remove old file before writing to new one
 	err := os.Remove(path)
