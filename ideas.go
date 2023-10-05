@@ -82,7 +82,7 @@ func Backup() {
 	input, err := os.ReadFile(path)
 	checkError(err)
 
-	err = os.WriteFile(path + ".backup", input, 0600)
+	err = os.WriteFile(path+".backup", input, 0600)
 	checkError(err)
 }
 
