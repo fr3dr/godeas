@@ -58,7 +58,8 @@ func Remove(index int) {
 func List() {
 	// list all ideas and print index
 	for i, v := range ideas {
-		fmt.Println(i+1, v)
+		index_num := fmt.Sprintf("[%d]", i+1)
+		fmt.Println(index_num, v)
 	}
 }
 
