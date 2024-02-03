@@ -9,24 +9,22 @@ import (
 )
 
 func main() {
+	// get home dir
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// generate flags
 	add := flag.String("a", "", "add an idea")
 	remove := flag.Int("r", 0, "remove an idea by line number")
 	list := flag.Bool("l", false, "list ideas")
 	clear := flag.Bool("c", false, "clear ideas")
-	path := flag.String("p", "", "custom path to ideas file")
+	path := flag.String("p", homeDir + "/ideas.txt", "custom path to ideas file")
 	flag.Parse()
 
 	// set path to ideas file
-	if *path != "" {
-		ideas.SetPath(*path)
-	} else {
-		homeDir, err := os.UserHomeDir()
-		if err != nil {
-			log.Fatal(err)
-		}
-		ideas.SetPath(homeDir + "/ideas.txt")
-	}
+	ideas.SetPath(*path)
 
 	// read file and back it up
 	ideas.Read()
